@@ -1,0 +1,16 @@
+exchange: BINANCE
+market: SPOT
+quote_asset: USDT
+
+selection:
+  top_n: 20
+  liquidity_metric: quote_volume
+  liquidity_window_days: 30
+
+eligibility:
+  minimum_history_days: 180
+  minimum_completeness: 0.99
+  require_positive_price: true
+  require_positive_quote_volume: true
+  exclude_stablecoins: true
+  exclude_leveraged_tokens: true

@@ -1,0 +1,43 @@
+asset,type,exclude,notes
+USDC,STABLECOIN,true,USD stablecoin
+FDUSD,STABLECOIN,true,USD stablecoin
+TUSD,STABLECOIN,true,USD stablecoin
+USDP,STABLECOIN,true,USD stablecoin
+DAI,STABLECOIN,true,USD stablecoin
+BUSD,STABLECOIN,true,USD stablecoin
+USDS,STABLECOIN,true,USD stablecoin
+USDSB,STABLECOIN,true,StableUSD BEP2 USD stablecoin
+PAX,STABLECOIN,true,Paxos Standard legacy ticker for Pax Dollar
+UST,STABLECOIN,true,TerraUSD legacy stablecoin
+USTC,STABLECOIN,true,TerraClassicUSD legacy stablecoin
+USDE,SYNTHETIC_DOLLAR,true,Ethena synthetic dollar
+USD1,STABLECOIN,true,USD stablecoin
+RLUSD,STABLECOIN,true,Ripple USD stablecoin
+XUSD,STABLECOIN,true,StraitsX USD stablecoin
+SUSD,STABLECOIN,true,Synthetix USD stablecoin
+USDD,STABLECOIN,true,USD stablecoin
+GUSD,STABLECOIN,true,Gemini USD stablecoin
+USDJ,STABLECOIN,true,USD stablecoin
+VAI,STABLECOIN,true,USD-linked stable asset
+PYUSD,STABLECOIN,true,PayPal USD stablecoin
+BFUSD,CASH_LIKE,true,Reward-bearing USD-linked margin asset
+BIDR,FIAT_TOKEN,true,Indonesian rupiah-linked token
+IDRT,FIAT_TOKEN,true,Indonesian rupiah token
+BKRW,FIAT_TOKEN,true,Binance KRW stablecoin
+KGST,FIAT_TOKEN,true,Kyrgyz Som stablecoin
+BGBP,FIAT_TOKEN,true,Binance GBP stablecoin
+AEUR,FIAT_TOKEN,true,Euro-linked stable asset
+EURI,FIAT_TOKEN,true,Euro-linked stable asset
+EURT,FIAT_TOKEN,true,Euro-linked stable asset
+XSGD,FIAT_TOKEN,true,Singapore dollar-linked stablecoin
+AUD,FIAT,true,Fiat currency
+BRL,FIAT,true,Fiat currency
+EUR,FIAT,true,Fiat currency
+GBP,FIAT,true,Fiat currency
+NGN,FIAT,true,Fiat currency
+PLN,FIAT,true,Fiat currency
+RON,FIAT,true,Fiat currency
+RUB,FIAT,true,Fiat currency
+TRY,FIAT,true,Fiat currency
+UAH,FIAT,true,Fiat currency
+ZAR,FIAT,true,Fiat currency

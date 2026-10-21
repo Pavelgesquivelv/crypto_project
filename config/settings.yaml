@@ -1,0 +1,25 @@
+project:
+  name: ACRS
+  specification_version: "1.0"
+  environment: research
+  timezone: UTC
+
+research:
+  economic_start: 2021-01-01
+  development_end: 2025-12-31
+  lockbox_start: 2026-01-01
+  lockbox_end: 2026-09-30
+  warmup_days: 210
+
+timeframes:
+  canonical: 1h
+  signal: 4h
+  macro: 1d
+
+paths:
+  raw_data: data/raw
+  normalized_data: data/normalized
+  derived_data: data/derived
+  metadata: data/metadata
+  reports: reports
+  logs: logs
