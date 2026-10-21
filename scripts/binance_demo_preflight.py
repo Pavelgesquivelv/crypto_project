@@ -144,6 +144,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="fail unless both Demo API credential variables are present",
     )
+    parser.add_argument(
+        "--strict-symbols",
+        action="store_true",
+        help="fail when any frozen historical symbol is unavailable in Demo",
+    )
     return parser.parse_args()
 
 
@@ -220,7 +225,8 @@ def run(args: argparse.Namespace) -> int:
             or item["quote_asset"] != "USDT"
             or item["spot_allowed"] is False
         ]
-        if bad_symbols:
+        report["unavailable_symbols"] = bad_symbols
+        if bad_symbols and args.strict_symbols:
             raise RuntimeError(f"Demo symbol checks failed: {bad_symbols}")
 
         if has_credentials:
@@ -257,7 +263,13 @@ def run(args: argparse.Namespace) -> int:
     print("ACRS BINANCE SPOT DEMO — READ-ONLY PREFLIGHT")
     print(f"Base URL              : {BASE_URL}")
     print(f"Strategy              : {report['strategy']}")
-    print(f"Symbols checked       : {len(symbols)}")
+    print(f"Symbols requested     : {len(symbols)}")
+    print(f"Symbols available     : {len(symbols) - len(report['unavailable_symbols'])}")
+    if report["unavailable_symbols"]:
+        print(
+            "Historical symbols unavailable in Demo: "
+            f"{report['unavailable_symbols']}"
+        )
     print(f"Credentials present   : {has_credentials}")
     print(f"Orders submitted      : {report['orders_submitted']}")
     print(f"Report                : {report_path}")
