@@ -264,6 +264,12 @@ def run() -> Path:
     selected.write_parquet(output_dir / "range_candidates_shadow.parquet", compression="zstd")
 
     latest_global = global_regimes.tail(1).to_dicts()[0]
+    signal_status = (
+        "READY_FOR_CANDIDATE_REVIEW"
+        if latest_global["global_regime"] != "UNCERTAIN"
+        and latest_global["global_confidence"] >= CONFIDENCE_THRESHOLD
+        else "BLOCKED_GLOBAL_UNCERTAIN"
+    )
     manifest = {
         "mode": "BINANCE_SPOT_DEMO_SIGNAL_SHADOW",
         "as_of": run_time.isoformat(),
@@ -272,6 +278,9 @@ def run() -> Path:
         "global_regime": latest_global["global_regime"],
         "global_confidence": latest_global["global_confidence"],
         "stress_signal": latest_global["stress_signal"],
+        "global_continuity_reset": latest_global["continuity_reset"],
+        "global_state_reset": latest_global["state_reset"],
+        "signal_status": signal_status,
         "signal_input_rows": signal_inputs.height,
         "base_signal_rows": base_signals.height,
         "stress_signal_rows": stress_signals.height,

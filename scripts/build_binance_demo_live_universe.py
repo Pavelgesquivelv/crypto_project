@@ -62,7 +62,7 @@ def build_candidates(
         classification.join(lifecycle, on="symbol", how="inner")
         .with_columns(
             pl.col("symbol")
-            .replace(ticker_volume, default=0.0)
+            .replace_strict(ticker_volume, default=0.0)
             .cast(pl.Float64)
             .alias("current_quote_volume_24h")
         )
