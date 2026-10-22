@@ -1,0 +1,11 @@
+[Unit]
+Description=Run ACRS Binance Spot Demo shadow cycle daily
+
+[Timer]
+OnCalendar=*-*-* 00:20:00 UTC
+Persistent=true
+Unit=acrs-demo-shadow.service
+
+[Install]
+WantedBy=timers.target
+

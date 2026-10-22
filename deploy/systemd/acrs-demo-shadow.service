@@ -1,0 +1,15 @@
+[Unit]
+Description=ACRS Binance Spot Demo daily shadow cycle
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=cryptobot
+WorkingDirectory=/home/cryptobot/acrs
+EnvironmentFile=/home/cryptobot/.config/acrs/binance_demo.env
+ExecStart=/home/cryptobot/acrs/.venv/bin/python scripts/build_binance_demo_live_universe.py
+ExecStartPost=/home/cryptobot/acrs/.venv/bin/python scripts/run_binance_demo_signal_shadow.py
+NoNewPrivileges=true
+PrivateTmp=true
+
