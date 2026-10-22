@@ -32,6 +32,20 @@ STRESS_COST = 0.0044
 BASE_SLIPPAGE_BPS = 2.0
 STRESS_SLIPPAGE_BPS = 12.0
 CONFIDENCE_THRESHOLD = 0.90
+GLOBAL_INPUT_COLUMNS = [
+    "date",
+    "decision_time_utc",
+    "global_base_usable",
+    "btc_macro_regime",
+    "btc_macro_confidence",
+    "btc_trend_up_score",
+    "btc_trend_down_score",
+    "trend_up_share",
+    "trend_down_share",
+    "range_share",
+    "net_trend_breadth",
+    "median_pairwise_corr",
+]
 
 
 def build_position_candidates(
@@ -126,6 +140,31 @@ def build_market_frames(
     )
 
 
+def load_live_global_history(before: datetime) -> pl.DataFrame:
+    frames: list[pl.DataFrame] = []
+    if not OUTPUT_ROOT.exists():
+        return pl.DataFrame()
+    for directory in sorted(OUTPUT_ROOT.iterdir()):
+        path = directory / "global_regimes.parquet"
+        if not path.is_file():
+            continue
+        frame = pl.read_parquet(path)
+        if not set(GLOBAL_INPUT_COLUMNS).issubset(frame.columns):
+            raise RuntimeError(f"live global snapshot missing input columns: {path}")
+        prior = frame.filter(pl.col("decision_time_utc") < before).select(
+            GLOBAL_INPUT_COLUMNS
+        )
+        if not prior.is_empty():
+            frames.append(prior)
+    if not frames:
+        return pl.DataFrame()
+    return (
+        pl.concat(frames, how="vertical_relaxed")
+        .unique(subset=["decision_time_utc"], keep="last")
+        .sort("decision_time_utc")
+    )
+
+
 def build_global_snapshot(
     top20: pl.DataFrame,
     four_hour_features: pl.DataFrame,
@@ -171,26 +210,20 @@ def build_global_snapshot(
         how="left",
     )
 
-    required = [
-        "date",
-        "decision_time_utc",
-        "global_base_usable",
-        "btc_macro_regime",
-        "btc_macro_confidence",
-        "btc_trend_up_score",
-        "btc_trend_down_score",
-        "trend_up_share",
-        "trend_down_share",
-        "range_share",
-        "net_trend_breadth",
-        "median_pairwise_corr",
-    ]
-    history = pl.read_parquet(GLOBAL_HISTORY).select(required)
+    current_time = current_inputs["decision_time_utc"][0]
+    history = pl.read_parquet(GLOBAL_HISTORY).select(GLOBAL_INPUT_COLUMNS)
     history = history.filter(
-        pl.col("decision_time_utc") < current_inputs["decision_time_utc"][0]
+        pl.col("decision_time_utc") < current_time
     )
+    live_history = load_live_global_history(current_time)
+    if not live_history.is_empty():
+        history = pl.concat([history, live_history], how="vertical_relaxed")
+        history = (
+            history.unique(subset=["decision_time_utc"], keep="last")
+            .sort("decision_time_utc")
+        )
     combined = pl.concat(
-        [history, current_inputs.select(required)],
+        [history, current_inputs.select(GLOBAL_INPUT_COLUMNS)],
         how="vertical_relaxed",
     ).sort("decision_time_utc")
     return classify_global_regime(combined)
